@@ -1,1 +1,0 @@
-"""Resume Intelligence backend package."""

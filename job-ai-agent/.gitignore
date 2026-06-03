@@ -1,9 +1,0 @@
-__pycache__/
-*.py[cod]
-.pytest_cache/
-.env
-.venv/
-data/
-chromadb/
-playwright-report/
-
