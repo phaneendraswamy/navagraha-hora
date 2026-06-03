@@ -1,0 +1,15 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: resume_ai_postgres
+    environment:
+      POSTGRES_DB: resume_ai
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - resume_ai_pgdata:/var/lib/postgresql/data
+
+volumes:
+  resume_ai_pgdata:

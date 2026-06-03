@@ -1,36 +1,27 @@
-# Phaneendra Portfolio
+# నవగ్రహ హోరా | Navagraha Hora Calendar
 
-Live Link: https://your-vercel-link
+A sunrise-based Vedic planetary hour (Hora) calendar in Telugu.
 
-Description:
-AI + Data Analytics portfolio showcasing projects, dashboards, and systems.
+## Features
+- 🪐 Live current hora with Telugu planet names
+- 📍 Location-based sunrise via Open-Meteo API
+- 🔍 City search + GPS location support
+- ⏱️ Manual sunrise override
+- 📅 7-day calendar strip with day rulers
+- 🕐 Full 24-hora daily schedule
 
-Tech:
-- React
-- Vercel
-- AI integrations
+## Tech Stack
+- React 18 + Vite
+- Tailwind CSS
+- Lucide React icons
+- Open-Meteo API (free, no key needed)
 
-## Run locally
+## Run Locally
 
 ```bash
 npm install
 npm run dev
 ```
 
-## Build
-
-```bash
-npm run build
-```
-
-The production output is generated in `dist/`.
-
-## Deploy to Vercel
-
-1. Push the project to GitHub.
-2. Import the repository into Vercel.
-3. Use the default Vite build settings:
-   - Build command: `npm run build`
-   - Output directory: `dist`
-
-`vercel.json` is included for SPA routing support.
+## Deploy
+Deployed on Vercel — zero config needed.

@@ -1,0 +1,8 @@
+.venv/
+__pycache__/
+*.pyc
+.env
+exports/*
+!exports/.gitkeep
+.streamlit/
+.pytest_cache/

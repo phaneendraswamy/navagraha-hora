@@ -1,8 +1,0 @@
-{
-  "rewrites": [
-    {
-      "source": "/((?!assets/|images/|profile.png|Phaneendra-Resume.txt|favicon.ico).*)",
-      "destination": "/"
-    }
-  ]
-}

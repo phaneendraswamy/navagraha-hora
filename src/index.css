@@ -1,131 +1,17 @@
-@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
-  :root {
-    color-scheme: dark;
-  }
-
-  html {
-    scroll-behavior: smooth;
-  }
-
-  body {
-    @apply bg-slate-950 font-body text-slate-100 antialiased transition-colors duration-300;
-    background-image:
-      radial-gradient(circle at 12% 14%, rgba(14, 165, 233, 0.18), transparent 20%),
-      radial-gradient(circle at 86% 18%, rgba(52, 211, 153, 0.12), transparent 18%),
-      linear-gradient(115deg, rgba(8, 47, 73, 0.45), transparent 36%),
-      linear-gradient(300deg, rgba(6, 78, 59, 0.18), transparent 30%),
-      linear-gradient(rgba(56, 189, 248, 0.06) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(56, 189, 248, 0.06) 1px, transparent 1px),
-      linear-gradient(rgba(148, 163, 184, 0.04) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(148, 163, 184, 0.04) 1px, transparent 1px),
-      linear-gradient(180deg, #020617 0%, #0b1120 100%);
-    background-size: auto, auto, auto, auto, 120px 120px, 120px 120px, 24px 24px, 24px 24px, auto;
-    background-position: 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0;
-    min-height: 100vh;
-    overflow-x: clip;
-  }
-
-  body.light {
-    @apply bg-slate-100 text-slate-900;
-    background-image:
-      radial-gradient(circle at 12% 14%, rgba(14, 165, 233, 0.1), transparent 22%),
-      radial-gradient(circle at 86% 18%, rgba(52, 211, 153, 0.08), transparent 20%),
-      linear-gradient(115deg, rgba(14, 165, 233, 0.05), transparent 34%),
-      linear-gradient(300deg, rgba(16, 185, 129, 0.05), transparent 28%),
-      linear-gradient(rgba(14, 165, 233, 0.035) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(14, 165, 233, 0.035) 1px, transparent 1px),
-      linear-gradient(rgba(148, 163, 184, 0.04) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(148, 163, 184, 0.04) 1px, transparent 1px),
-      linear-gradient(180deg, #f5f7fb 0%, #dde7f1 100%);
-    background-size: auto, auto, auto, auto, 120px 120px, 120px 120px, 24px 24px, 24px 24px, auto;
-    background-position: 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0;
-  }
-
   * {
-    @apply border-slate-800;
+    box-sizing: border-box;
   }
-
-  ::selection {
-    @apply bg-ocean/30 text-white;
-  }
-}
-
-@layer components {
-  .container-shell {
-    @apply mx-auto w-full max-w-7xl px-3 sm:px-6 lg:px-8;
-  }
-
-  .section-panel {
-    @apply max-w-full rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl;
-  }
-
-  .light .section-panel {
-    @apply border-slate-300/90 bg-white shadow-[0_18px_60px_rgba(15,23,42,0.08)];
-  }
-
-  .light .data-card {
-    @apply border-slate-300/90 bg-white text-slate-900 shadow-[0_14px_35px_rgba(15,23,42,0.08)] hover:shadow-[0_24px_55px_rgba(14,165,233,0.14)];
-  }
-
-  .light .project-surface {
-    @apply border-slate-300/90 bg-gradient-to-br from-white via-slate-50 to-sky-50/80 shadow-[0_18px_60px_rgba(15,23,42,0.08)];
-  }
-
-  .light .tech-chip {
-    @apply border-slate-300/80 bg-white shadow-[0_10px_28px_rgba(15,23,42,0.06)];
-  }
-
-  .data-card {
-    @apply border border-slate-200 bg-white/80 shadow-[0_20px_70px_rgba(15,23,42,0.08)] backdrop-blur-sm transition duration-300 hover:-translate-y-1 hover:shadow-[0_28px_90px_rgba(14,165,233,0.12)] dark:border-white/10 dark:bg-slate-950/50;
-  }
-
-  .project-surface {
-    @apply relative border border-white/10 bg-gradient-to-br from-white/90 via-white/80 to-sky-50/70 dark:from-slate-950/90 dark:via-slate-900/80 dark:to-slate-950/70;
-  }
-
-  .metric-panel {
-    @apply border border-white/10 bg-gradient-to-r from-slate-950 via-slate-900 to-slate-950 text-white shadow-[0_24px_80px_rgba(14,165,233,0.18)];
-  }
-
-  .tech-chip {
-    @apply flex items-center gap-3 rounded-2xl border bg-white/70 p-3 shadow-[0_16px_40px_rgba(15,23,42,0.06)] dark:bg-slate-950/55;
-  }
-
-  .resume-frame {
-    @apply rounded-[1.5rem] border border-white/10 bg-gradient-to-br from-white/10 via-white/5 to-ocean/10 shadow-[0_24px_80px_rgba(14,165,233,0.16)] dark:from-slate-900/60 dark:via-slate-950/40 dark:to-slate-900/70;
-  }
-
-  .reveal-card {
-    animation: revealCard 0.75s ease-out both;
+  body {
+    margin: 0;
+    font-family: 'Noto Sans Telugu', 'Segoe UI', system-ui, sans-serif;
   }
 }
 
-@layer utilities {
-  @keyframes revealCard {
-    from {
-      opacity: 0;
-      transform: translateY(18px);
-    }
-
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  .resume-embed {
-    height: 400px;
-  }
-
-  @media (min-width: 640px) {
-    .resume-embed {
-      height: 600px;
-    }
-  }
+.touch-scroll {
+  -webkit-overflow-scrolling: touch;
 }
