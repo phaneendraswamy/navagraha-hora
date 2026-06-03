@@ -134,13 +134,37 @@ function App() {
   const [locationQuery, setLocationQuery] = useState(defaultLocation.name)
   const [manualSunrise, setManualSunrise] = useState('')
   const [sunrise, setSunrise] = useState(() => combineDateAndTime(toDateInputValue(), '05:38'))
-  const [status, setStatus] = useState('loading')
+  const [status, setStatus] = useState('locating')
   const [notice, setNotice] = useState('')
   const [now, setNow] = useState(() => new Date())
 
   useEffect(() => {
     const timer = window.setInterval(() => setNow(new Date()), 30 * 1000)
     return () => window.clearInterval(timer)
+  }, [])
+
+  // Auto-detect location on first load
+  useEffect(() => {
+    if (!navigator.geolocation) {
+      setStatus('loading')
+      return
+    }
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const detected = {
+          name: 'ప్రస్తుత స్థానం',
+          latitude: Number(position.coords.latitude.toFixed(4)),
+          longitude: Number(position.coords.longitude.toFixed(4)),
+        }
+        setLocation(detected)
+        setLocationQuery(detected.name)
+      },
+      () => {
+        // Permission denied — silently fall back to default location
+        setStatus('loading')
+      },
+      { enableHighAccuracy: true, timeout: 10000 },
+    )
   }, [])
 
   useEffect(() => {
