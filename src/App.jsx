@@ -65,7 +65,7 @@ function parseOpenMeteoTime(value) {
 }
 
 async function fetchSunriseForLocation(location, dateValue) {
-  // Uses our Vercel proxy (/api/sunrise) — avoids browser CORS issues with open-meteo
+  // Uses our Vercel proxy (/api/sunrise) — tries open-meteo, falls back to sunrise-sunset.org
   const params = new URLSearchParams({
     latitude: String(location.latitude),
     longitude: String(location.longitude),
@@ -74,9 +74,15 @@ async function fetchSunriseForLocation(location, dateValue) {
   const response = await fetch(`/api/sunrise?${params}`)
   if (!response.ok) throw new Error('Sunrise lookup failed')
   const data = await response.json()
-  const sunriseValue = data?.daily?.sunrise?.[0]
-  if (!sunriseValue) throw new Error('Sunrise time is unavailable')
-  return parseOpenMeteoTime(sunriseValue)
+  if (!data?.sunrise) throw new Error('Sunrise time is unavailable')
+
+  if (data.isUtc) {
+    // Backup API returns UTC — parse and convert to local Date
+    return new Date(data.sunrise)
+  }
+  // open-meteo returns "YYYY-MM-DDTHH:MM" local time
+  const [datePart, timePart] = data.sunrise.split('T')
+  return combineDateAndTime(datePart, timePart.slice(0, 5))
 }
 
 async function searchLocation(query) {
@@ -92,8 +98,7 @@ async function searchLocation(query) {
     latitude: match.latitude,
     longitude: match.longitude,
   }
-
-
+}
 
 // ── Loading Skeleton ────────────────────────────────────────────────────────
 function LoadingCard({ message }) {
