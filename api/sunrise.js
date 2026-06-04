@@ -6,7 +6,7 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Missing parameters' })
   }
 
-  // ── Attempt 1: open-meteo ────────────────────────────────────────────────
+  // ── Attempt 1: open-meteo ───────────────────────────────────────────────
   try {
     const params = new URLSearchParams({
       latitude,
@@ -17,7 +17,7 @@ export default async function handler(req, res) {
       end_date: date,
     })
     const response = await fetch(`https://api.open-meteo.com/v1/forecast?${params}`, {
-      signal: AbortSignal.timeout(5000), // 5s timeout
+      signal: AbortSignal.timeout(5000),
     })
     if (response.ok) {
       const data = await response.json()
@@ -25,37 +25,34 @@ export default async function handler(req, res) {
       if (sunriseValue) {
         res.setHeader('Cache-Control', 's-maxage=3600, stale-while-revalidate')
         res.setHeader('X-Source', 'open-meteo')
-        return res.status(200).json({ sunrise: sunriseValue })
+        // Returns local time string like "2026-06-04T05:29"
+        return res.status(200).json({ sunrise: sunriseValue, isUtc: false })
       }
     }
   } catch {
     // open-meteo failed — fall through to backup
   }
 
-  // ── Attempt 2: sunrise-sunset.org (backup) ──────────────────────────────
+  // ── Attempt 2: sunrise-sunset.org (backup) ─────────────────────────────
   try {
     const params = new URLSearchParams({
       lat: latitude,
       lng: longitude,
       date,
-      formatted: '0',
+      formatted: '0', // returns full ISO 8601 UTC datetime
     })
     const response = await fetch(`https://api.sunrise-sunset.org/json?${params}`, {
       signal: AbortSignal.timeout(5000),
     })
     const data = await response.json()
+
     if (data?.status === 'OK' && data?.results?.sunrise) {
-      // Convert UTC ISO string to local time string "HH:MM"
-      const utcDate = new Date(data.results.sunrise)
-      // Get offset in minutes from lat/lng using open-meteo timezone endpoint
-      // Simpler: return the UTC time and let client handle with timezone offset
-      const utcHours = String(utcDate.getUTCHours()).padStart(2, '0')
-      const utcMins = String(utcDate.getUTCMinutes()).padStart(2, '0')
-      // Return as ISO with date so client can parse correctly
-      const sunriseISO = `${date}T${utcHours}:${utcMins}+00:00`
+      // IMPORTANT: return the raw UTC ISO string as-is.
+      // e.g. "2026-06-03T23:58:00+00:00" for a 5:28 AM IST sunrise on June 4.
+      // The client does new Date(utcString) which correctly converts to local time.
       res.setHeader('Cache-Control', 's-maxage=3600, stale-while-revalidate')
       res.setHeader('X-Source', 'sunrise-sunset.org')
-      return res.status(200).json({ sunrise: sunriseISO, isUtc: true })
+      return res.status(200).json({ sunrise: data.results.sunrise, isUtc: true })
     }
   } catch {
     // both APIs failed
