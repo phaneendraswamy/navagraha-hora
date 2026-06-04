@@ -65,15 +65,13 @@ function parseOpenMeteoTime(value) {
 }
 
 async function fetchSunriseForLocation(location, dateValue) {
+  // Uses our Vercel proxy (/api/sunrise) — avoids browser CORS issues with open-meteo
   const params = new URLSearchParams({
     latitude: String(location.latitude),
     longitude: String(location.longitude),
-    daily: 'sunrise',
-    timezone: 'auto',
-    start_date: dateValue,
-    end_date: dateValue,
+    date: dateValue,
   })
-  const response = await fetch(`https://api.open-meteo.com/v1/forecast?${params}`)
+  const response = await fetch(`/api/sunrise?${params}`)
   if (!response.ok) throw new Error('Sunrise lookup failed')
   const data = await response.json()
   const sunriseValue = data?.daily?.sunrise?.[0]
@@ -82,8 +80,9 @@ async function fetchSunriseForLocation(location, dateValue) {
 }
 
 async function searchLocation(query) {
-  const params = new URLSearchParams({ name: query, count: '1', language: 'en', format: 'json' })
-  const response = await fetch(`https://geocoding-api.open-meteo.com/v1/search?${params}`)
+  // Uses our Vercel proxy (/api/geocode) — avoids browser CORS issues
+  const params = new URLSearchParams({ name: query })
+  const response = await fetch(`/api/geocode?${params}`)
   if (!response.ok) throw new Error('Location search failed')
   const data = await response.json()
   const match = data?.results?.[0]
@@ -93,7 +92,8 @@ async function searchLocation(query) {
     latitude: match.latitude,
     longitude: match.longitude,
   }
-}
+
+
 
 // ── Loading Skeleton ────────────────────────────────────────────────────────
 function LoadingCard({ message }) {
