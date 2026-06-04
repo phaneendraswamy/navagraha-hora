@@ -167,7 +167,7 @@ function App() {
   const [locationQuery, setLocationQuery] = useState(defaultLocation.name)
   const [manualSunrise, setManualSunrise] = useState('')
   const [sunrise, setSunrise] = useState(() => combineDateAndTime(todayStr, '05:38'))
-  const [status, setStatus] = useState('locating')
+  const [status, setStatus] = useState('loading')
   const [notice, setNotice] = useState('')
   const [now, setNow] = useState(() => new Date())
   const [retryCount, setRetryCount] = useState(0)
@@ -180,27 +180,21 @@ function App() {
     return () => window.clearInterval(timer)
   }, [])
 
-  // Auto-detect GPS on first load
+  // GPS runs silently in the background — does NOT block sunrise from loading
+  // Sunrise fetches immediately with default location; GPS updates it if/when ready
   useEffect(() => {
-    if (!navigator.geolocation) {
-      setStatus('loading')
-      return
-    }
+    if (!navigator.geolocation) return
     navigator.geolocation.getCurrentPosition(
       (position) => {
-        const detected = {
+        setLocation({
           name: 'ప్రస్తుత స్థానం',
           latitude: Number(position.coords.latitude.toFixed(4)),
           longitude: Number(position.coords.longitude.toFixed(4)),
-        }
-        setLocation(detected)
-        setLocationQuery(detected.name)
+        })
+        setLocationQuery('ప్రస్తుత స్థానం')
       },
-      () => {
-        // Permission denied — fall back to default silently
-        setStatus('loading')
-      },
-      { enableHighAccuracy: true, timeout: 10000 },
+      () => { /* silently ignore — default location already loaded */ },
+      { enableHighAccuracy: false, timeout: 5000, maximumAge: 60000 },
     )
   }, [])
 
